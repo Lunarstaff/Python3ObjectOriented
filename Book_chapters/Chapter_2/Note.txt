@@ -22,4 +22,115 @@ class MyFirstClass:
 为Point 类的增加一些行为：
     增加reset 的方法，这个方法用来把点移至原点(0, 0)
 注：MyFirstClass_v1.1.py
-方法（method）和定义一个函数（functioin）相同，以关键字def开头
+方法（method）和定义一个函数（functioin）相同，以关键字def开头,紧跟一个空格和方法名，方法名后面
+紧跟一对小括号，括号内包含参数列表。
+
+    方法和普通函数有一点不同，就是所有方法都有一个必需的参数，这个参数通常被称为self，
+    一个方法中的self参数，是对调用这个方法的对象的一个引用。
+    我们可以和其他对象一样访问这个对象的属性和方法
+
+除了可以直接调用一个具体对象的方法以外，还可以在类中调用这个函数，并且明确地把这个对象作为self参数
+传给对象：
+# 实例化一个对象pt
+pt = Point()
+# 给对象pt设定初始值
+pt.x = 3
+pt.y = 4
+# 检查1
+print(pt.x, pt.y)
+# 在类中调用这个函数，并且明确地把这个对象作为self参数传给对象
+Point.reset(pt)
+# 检查2
+print(pt.x, pt.y)
+
+# 输出为：
+# 3 4
+# 0 0
+
+如何给方法传递多个参数呢？
+为Point类增加一个新的方法，允许我们把点移动到任意位置，而不是只移动到原点。
+为Point类增加另外一个方法，接收另一个Point对象作为输入，然后返回这两个对象之间的距离。
+注：MyFirstClass_v1.2.py
+assert 函数是一个简单的测试工具，如果assert后面的语句是False（0、空或者None）的话，这个程序
+就会异常退出。
+
+对象的初始化：
+    大部分面向对象编程语言都有一个叫构造函数的特殊方法，当它被创建的时候会创建和初始化对象。
+    Python有一点不同，Python有一个机构函数和一个初始化函数，正常情况下，构造函数很少能用到，除非你
+    想做一些特别另类的操作。
+
+    初始化方法，有一个特殊的名字 __init__ ，其他的与普通方法相同。
+
+为Point类添加初始化函数，要求实例化Point对象时提供x 和y的坐标值。
+注：MyFirstClass_v1.3.py
+
+# 构造 一个P
+point = Point(3, 5)
+print(point.x, point.y)
+
+# 输出为：
+# 3 5
+
+Python的docstring提供了这种对文档方式的支持。在每个类、函数、方法的开头，紧接着它们的定义可
+以有一行Python的标准字符串（用单引号、双引号标注）或多行字符串（三单引号、三双引号标注）
+
+为Point类添加docstring
+注：MyFirstClass_v1.4.py
+
+在cmd命令提示符窗口输入python -i MyFirstClass_v1.4.py ，然后在Python提示符窗口输入help(Point)
+打印出Point类的docstring如下：
+
+C:\E-Data-File\腾讯课堂\Python入门\Python3ObjectOriented\Book_chapters\Chapter_2\testcode>python -i MyFirstClass_v1.4.py
+
+>>> help(Point)
+Help on class Point in module __main__:
+
+class Point(builtins.object)
+ |  Point类
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, x=0, y=0)
+ |      初始化方法：
+ |          初始化一个新的Point类型对象的位置，如果没有给初始值，新的点类型对象默认位置为(0, 0)
+ |      :param x:
+ |      :param y:
+ |
+ |  calculate_distance(self, other_point)
+ |      计算两个点的直线距离，返回值为浮点数
+ |      distance = sqrt((x1 - x2)**2 - (y1 - y2)**2)
+ |      :param other_point:
+ |      :return:
+ |
+ |  move(self, x, y)
+ |      移动点对象到一个新的位置(x, y)
+ |      :param x:
+ |      :param y:
+ |      :return:
+ |
+ |  reset(self)
+ |      重置点位置，把点位置设置为(0, 0)
+ |      :return:
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |
+ |  __weakref__
+ |      list of weak references to the object (if defined)
+
+
+组织模块
+不能把模块放到模块里面，就像一个文件只能持有一个文件一样，毕竟模块也只不过是Python文件。
+文件可以放到文件夹里，模块也是。一个包（package）就是放到一个文件夹里的模块集合。
+    包的名字就是文件夹的名字，我们只需要告诉Python这个文件夹是一个包，并且把一个名为__init__.py的
+    文件（通常是空的）放到这个文件夹里。如果没有这个文件，就不能从这个文件夹里导入那些模块。
+注：C:\E-Data-File\腾讯课堂\Python入门\Python3ObjectOriented\Book_chapters\Chapter_2\image
+目录下的 “组织模块*”几个图片。
+
+    绝对导入
+    相对导入
+
+
