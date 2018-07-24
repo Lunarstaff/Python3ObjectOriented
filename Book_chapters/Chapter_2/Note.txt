@@ -133,4 +133,60 @@ class Point(builtins.object)
     绝对导入
     相对导入
 
+访问控制
+    对象里的某些属性和方法会被标记为“私有的（protected）”，意思是只有这个对象可以访问它们。
+    另外一些会被标记为“受保护的（protected）”，意思是只有这个类和它的子类可以访问
+    剩下的会被标记为“公共的（public）”，意思是允许任何其他对象访问他们。
 
+    Python没有这些，相反，它提供了一个不强制的指南和最佳实践。在技术层面上，一个类里的所有方法和
+    属性都是公共可访问的。如果我们想建议某个方法不应该能被公共访问，我们可以通过在docstring里放
+    一个提示来表明是否这个方法只是内部使用的（解释面向公共的API如何工作会更好！）
+
+名称改编：强烈建议外部对象不能访问某个属性或者方法，就给它添加一个双下画线的前缀。意思就是外部对象如果
+真的想访问还是仍然可以调用这个方法的，但是你需要做额外的工作，并且它是一个很强的指示器，指示你想到你
+的属性应该保持私有性。
+
+
+
+#案例学习
+注：./cmd-notebook/
+构建一个简单的命令行笔记本应用（command-lin notebook application）。
+要点：不会使用到多个包，会用到类、函数、方法和docstring
+分析：
+    1、笔记（note）是存在笔记本（notebook）里的短的文本备忘录（memos）。
+    2、每一条笔记（note）都应该记录下它被创建的时间，并且为了查询方便，可以添加标签（tag）
+    3、笔记（note）应该可以修改，也可以被搜索
+    4、所有操作都通过命令行实现
+
+note对象有memo本身、tags和creation_date这几个属性。每一个note也需要一个唯一的整数ID
+note有一个方法可以修改它的内容，另一个方法可以修改标签
+note有一个match方法，输入一个字符串，返回是否有一条note与输入的字符串匹配。
+notebook对象会有一个notes列表做为它的属性，有一个能返回过滤后的notes列表的search方法
+
+类图：
+
+NoteBook
+    +notes; list
+    +search(filter: str): list
+    +new_note(memo, tags='')
+    +modify_memo(note_id, memo)
+    +modify_tags(mote_id, tags)
+---------------------------------------
+                   ^
+                   ||
+                   |*
+                   |
+---------------------------------------
+Note
+    +memo
+    +creation_date
+    +tags
+    +match(search_filter: str) boolean
+
+包结构：
+C:\E-Data-File\腾讯课堂\Python入门\Python3ObjectOriented\Book_chapters\Chapter_2\cmd-notebook\command_option.py
+
+./cmd-notebook/
+    notebook.py
+    menu.py
+    command_option.py
