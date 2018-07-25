@@ -190,3 +190,45 @@ C:\E-Data-File\腾讯课堂\Python入门\Python3ObjectOriented\Book_chapters\Cha
     notebook.py
     menu.py
     command_option.py
+
+测试下notebook.py，需要把notebook.py文件放到Python解释器的目录下（python.exe文件同目录下）
+注：notebook.py
+
+测试一：
+>>> from notebook import Note
+>>> n1 = Note("first note")
+>>> n2 = Note("second note")
+>>> n1.id
+1
+>>> n2.id
+2
+>>> n1.match(note)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'note' is not defined
+>>> n1.match("note")
+True
+>>> n2.match("sec")
+True
+>>>
+
+测试二：
+>>> from notebook import Note, Notebook
+>>> n = Notebook()
+>>> n.new_note("first note")
+>>> n.new_note("2nd note")
+>>> n.notes
+[<notebook.Note object at 0x000002669813F2B0>, <notebook.Note object at 0x000002669813F320>]
+>>> n.notes[0].id
+1
+>>> n.notes[1].id
+2
+>>> n.notes[0].memo
+'first note'
+>>> n.search("note")
+[<notebook.Note object at 0x000002669813F2B0>, <notebook.Note object at 0x000002669813F320>]
+>>> n.search("2")
+[<notebook.Note object at 0x000002669813F320>]
+>>> n.modify_memo(1,"1st note")
+>>> n.notes[0].memo
+'1st note'
