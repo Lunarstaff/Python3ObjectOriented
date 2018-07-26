@@ -48,6 +48,7 @@ class Notebook:
         :return:
         """
         self.notes.append(Note(memo, tags))
+
     def _find_note(self, note_id):
         """
         找到notebook中指定id的note
@@ -55,7 +56,7 @@ class Notebook:
         :return:
         """
         for note in self.notes:
-            if note.id ==  note_id:
+            if str(note.id) ==  (note_id):
                 return note
         return None
 
@@ -73,7 +74,14 @@ class Notebook:
         #         break
 
         # v2.0
-        self._find_note(note_id).memo = memo
+        # self._find_note(note_id).memo = memo
+
+        # v3.0
+        note = self._find_note(note_id)
+        if note:
+            note.memo = memo
+            return True
+        return False
 
     def modify_tags(self, note_id, tags):
         """
