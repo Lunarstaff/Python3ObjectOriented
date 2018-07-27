@@ -23,3 +23,29 @@
     # 创建一个新的叫Supplier的类，和Contact类一样，但是他有额外的order(订单)方法
 
     测试一：
+    把MySubClass文件复制到Python解释器目录下（与python.exe同目录下）
+    >>> from MySubClass import Contact, Supplier
+    >>> c = Contact("ContaceName", "Contact@teller.com")
+    >>> s = Supplier("SupplierName", "Supplier@teller.com")
+    >>> print(c.name, c.email, s.name, s.email)
+    ContaceName Contact@teller.com SupplierName Supplier@teller.com
+    >>> c.all_contacts
+    [<MySubClass.Contact object at 0x00000216057787F0>, <MySubClass.Supplier object at 0x0000021605778748>]
+    >>> c.order("test-order")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    AttributeError: 'Contact' object has no attribute 'order'
+    >>> s.order("test-order")
+    If this were a real system we would send test-order order to SupplierName
+
+扩展内置类：
+    给列表类扩展，添加一个方法用于搜索。
+    注：MySubClassv2.0.py
+
+    测试二：
+    >>> from MySubClass import Contact, ContactList, Supplier
+    >>> c1 = Contact("John A", "Johna@teller.com")
+    >>> c2 = Contact("John B", "Johnb@teller.com")
+    >>> c3 = Contact("John C", "Johnc@teller.com")
+    >>> c4 = Contact("Jenna D", "Jennad@teller.com")
+    >>> [c.name for c in Contact.all_contacts.search("John")]
