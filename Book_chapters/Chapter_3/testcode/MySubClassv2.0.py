@@ -29,3 +29,40 @@ class Contact:
 class Supplier(Contact):
     def order(self, order):
         print("If this were a real system we would send {} order to {}".format(order, self.name))
+
+# Friend类，从Contact类继承，继承时重写init方法
+# v1.0，直接根据原方法重写
+# class Friend(Contact):
+#     def __init__(self, name, email, phone):
+#         self.name = name
+#         self.email = email
+#         self.phone = phone
+
+# v2.0，调用父类的方法，进行重写
+class Friend(Contact):
+    def __init__(self, name, email, phone):
+        super().__init__(name, email)
+        self.phone = phone
+
+
+# 一个mixin类
+class MailSender:
+    def send_mail(self, message):
+        print("Sending mail to " + self.email)
+        # 电子邮件发送的实现
+
+
+# 通过多重继承定义一个新的类，既是Contact类 又是MailSender类
+class EmailableContact(Contact, MailSender):
+    pass
+
+
+
+# 增加一个存放地址的类：AddressHolder
+class AddressHolder:
+    def __init__(self, street, city, state, code):
+        self.street = street
+        self.city = city
+        self.state = state
+        self.code = code
+

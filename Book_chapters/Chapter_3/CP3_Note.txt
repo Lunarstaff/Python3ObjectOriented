@@ -49,3 +49,78 @@
     >>> c3 = Contact("John C", "Johnc@teller.com")
     >>> c4 = Contact("Jenna D", "Jennad@teller.com")
     >>> [c.name for c in Contact.all_contacts.search("John")]
+
+    常见的可提高扩展内置数据类型是：
+        object, list, set, list, dict, file, str.
+    整形int和浮点型float也偶尔会做继承
+
+重写和Super
+    继承可以经已存在的类添加新的行为。
+    重写可以改变类的行为。
+    重写，就是在子类里用一个新的方法（和超类里方法名字相同）来改变或者覆盖超类里的这个方法
+
+    下面，写一个Friend类，从Contact类继承，继承时重写init方法。
+    （不只有__init__方法，任何方法都可以被重写）
+    注：MySubClassv2.0.py
+
+    # v1.0，直接根据原方法重写
+    class Friend(Contact):
+        def __init__(self, name, email, phone):
+            self.name = name
+            self.email = email
+            self.phone = phone
+    # v2.0，调用父类的方法，进行重写
+    class Friend(Contact):
+        def __init__(self, name, email, phone):
+            super().__init__(name, email)
+            self.phone = phone
+
+    通过super得到父类对象的实例，并且调用这个对象的__init__方法，传递给它预期的参数。
+    super()可以在任何方法里调用，不只是__init__方法。
+    可以在方法内的任何位置调用super。
+
+多重继承：
+    多重继承，一个从多个父类继承过来的子类，可以访问所有父类的功能。不推荐使用。
+
+    给Contact类增加一个功能，允许self.email发送一封电子邮件。
+    百度Mixin:
+    Mixin
+    A free and lightning fast peer-to-peer transactional network for digital assets.
+
+    写一个mixin类
+    注：MySubClassv2.0.py
+    # 一个mixin类
+    class MailSender:
+        def send_mail(self, message):
+            print("Sending mail to " + self.email)
+            # 电子邮件发送的实现，Python标准库里的smtplib模块
+
+
+    # 通过多重继承定义一个新的类，既是Contact类 又是MailSender类
+    class EmailableContact(Contact, MailSender):
+        pass
+
+    多生继承的语法就像类定义里的参数列表。括号里可以包含两个（或者更多的）基类而不是一个，这些
+    基类使用逗号隔开。下面测试一下：
+    测试三：
+    >>> import MySubClass
+    >>> dir(MySubClass)
+    ['Contact', 'ContactList', 'EmailableContact', 'Friend', 'MailSender',
+    'Supplier', '__builtins__', '__cached__', '__doc__', '__file__',
+    '__loader__', '__name__', '__package__', '__spec__']
+    >>> e = MySubClass.EmailableContact("John Smith", "js@teller.com")
+    >>> MySubClass.Contact.all_contacts
+    [<MySubClass.EmailableContact object at 0x0000021FB6D3F2E8>]
+    >>> e.send_mail("Hell, test e-mail here")
+    Sending mail to js@teller.com
+
+    Contact类的初始化函数仍然会把一个新的联系人添加到all_contacts这个列表里，并且mixin可以发送
+    电子邮件给self.email。
+
+    # 增加一个存放地址的类：AddressHolder
+    class AddressHolder:
+        def __init__(self, street, city, state, code):
+            self.street = street
+            self.city = city
+            self.state = state
+            self.code = code
