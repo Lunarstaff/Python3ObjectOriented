@@ -124,3 +124,47 @@
             self.city = city
             self.state = state
             self.code = code
+    # Friend类 v3.0
+    class Friend(Contact, AddressHolder):
+        """
+        直接调用了每一个超类的init方法并且显示地传递了self参数。
+
+        Friend类的init方法首先调用了Contact类的init方法，隐式初始化了Object超类
+        Friend类然后调用了AddressHolder类的init方法，又一次隐式初始化了Object超类。
+        问题就在于父类被创建了两次，这不是我们期待的行为，并且如果这个方法正在做实际的工作，
+        这将导致非常严重的bug，像往一个银行账户存款两次一样！
+        """
+        def __init__(self, name, email, phone, street, city, state, code):
+            Contact.__init__(self,name, email)
+            AddressHolder.__init__(self, street, city, state, code)
+            self.phone = phone
+
+    # Friend类 v4.0 多重继承的正确版本
+    注：MySubClassv3_0.py
+
+
+多态：MySubClassv4_0.py
+    调用不同的子类将会产生不同的行为，而不须明确知道这个子类实际上是什么。
+    比如：想象一个可以播放音频文件的程序，媒体播放器可能需要加载一个AudioFile对象然后play它。
+        我们把一个play()的方法放到这个对象里，它负责解压或者提取音频，然后把音频引导到声卡或者扬声器
+        然而，对于不同类型的文件，解压和提取音频文件的过程是很不一样的。
+        使用多太和继承来让设计简单化。每种不同类型的文件都可以表示一个AudioFile的不同子类，每一个子类
+        都会有一个play() 方法（方法名称相同），但这个方法针对每个文件的实现是不同的。
+    所有音频文件的检查确保了初始化的一个有效扩展
+    多态可以让父类的init方法去访问来自不同子类的ext类变量。
+
+    测试一：
+    >>> import MySubClassv4_0 as tt
+    >>> ogg_f =tt.OggFile("myfil.ogg")
+    >>> ogg_f.play()
+    Playing myfil.ogg as ogg
+    >>> mp3_f = tt.MP3File("myfile.mp3")
+    >>> mp3_f.play()
+    Playing myfile.mp3 as mp3
+
+    >>> ogg_f =tt.MP3File("myfile.ogg")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "C:\Program Files\Python36\MySubClassv4_0.py", line 12, in __init__
+        raise Exception("Invalid file format")  # 弹出异常“Invalid file format(文件格式不合法)”
+    Exception: Invalid file format
