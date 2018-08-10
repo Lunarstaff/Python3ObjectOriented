@@ -168,3 +168,14 @@
       File "C:\Program Files\Python36\MySubClassv4_0.py", line 12, in __init__
         raise Exception("Invalid file format")  # 弹出异常“Invalid file format(文件格式不合法)”
     Exception: Invalid file format
+
+
+鸭子类型：
+    Python中的鸭子类型允许我们使用任何提供所需行为的对象，而不需要迫使它成为一个子类。
+    鸭子类型的对象只需要提供那些真正要访问的方法和属性。
+    不需要提供一个可用对象的完整接口，只需要实现实际使用的接口就行了。
+
+
+案例学习：
+    设计一个简单的房地产应用程序。
+    注：./case_cp3/
