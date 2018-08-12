@@ -67,15 +67,21 @@ class Apartment(Property):
 
         # 使用父类Property的静态方法产生的字典
         parent_init = Property.prompt_init()
-        laundry = ""
-        while laundry.lower() not in Apartment.valid_laundries:
-            # 提示输入洗衣间信息并展示洗衣间信息枚举
-            laundry = input("请输入洗衣间的属性（{}）：".format(", ".join(Apartment.valid_laundries)))
+        # v1.0
+        # laundry = ""
+        # while laundry.lower() not in Apartment.valid_laundries:
+        #     # 提示输入洗衣间信息并展示洗衣间信息枚举
+        #     laundry = input("请输入洗衣间的属性（{}）：".format(", ".join(Apartment.valid_laundries)))
+        #
+        # balcony = ""
+        # while balcony.lower() not in Apartment.valid_balconies:
+        #     # 提示输入阳台信息并展示阳台信息枚举
+        #     balcony = input("请输入阳台的属性（{}）：".format(", ".join(Apartment.valid_balconies)))
 
-        balcony = ""
-        while balcony.lower() not in Apartment.valid_balconies:
-            # 提示输入阳台信息并展示阳台信息枚举
-            balcony = input("请输入阳台的属性（{}）：".format(", ".join(Apartment.valid_balconies)))
+        # 根据v1.0中的处理方法，提取出get_valid_input方法，将v1.0优化如下：
+        # V2.0
+        laundry = get_valid_input("请输入洗衣间的属性:", Apartment.valid_laundries)
+        balcony = get_valid_input("请输入阳台的属性：", Apartment.valid_balconies)
 
         # dict.update方法把新的字典值合并到第一个字典里
         parent_init.update({
@@ -84,5 +90,65 @@ class Apartment(Property):
         })
         return parent_init
 
-    # 声明prompt_init为静态方法，一个文件只需要一条这样的语句
+    # 声明prompt_init为静态方法，一个类需要一条这样的语句
     # prompt_init = staticmethod(prompt_init)
+
+
+# 编写一个测试方法,把上面v1.0的交互方式提取出来
+def get_valid_input(input_string, valid_options):
+    """
+    传入两个参数，输入提示语（字符串类）和属性枚举（元组类）。
+    :param input_string:
+    :param valid_options:
+    :return:
+    """
+    input_string += " ({}) ".format(", ".join(valid_options))
+    response = input(input_string)
+    while response.lower() not in valid_options:
+        response = input(input_string)
+    return response
+
+# 根据上面这个验证方法，修改Apartment.prompt_init方法, 如上v2.0
+
+
+# House类，继承自Property类，与Apartment类平行
+class House(Property):
+    valid_garage = ("attached", "detached", "none")     # 停车位信息枚举
+    valid_fenced = ("yes", "no")                        # 围墙信息枚举
+
+    def __init__(self, num_stories="", garage="", fenced="", **kwargs):
+        super().__init__(**kwargs)
+        self.garage = garage
+        self.fenced = fenced
+        self.num_stories = num_stories  # House的仓库数量
+
+    def display(self):
+        super().display()
+        print("House信息详情：")
+        print("仓库的数量为：{}".format(self.num_stories))
+        print("车位信息：{}".format(self.garage))
+        print("围墙信息：{}".format(self.fenced))
+
+    def prompt_init():
+        parent_init = Property.prompt_init()
+        fenced = get_valid_input("请输入围墙信息：", House.valid_fenced)
+        garage = get_valid_input("请输入车位信息：", House.valid_garage)
+        num_stories = input("请输入仓库数量：")
+        parent_init.update({
+            "fenced": fenced,
+            "garage": garage,
+            "num_stories": num_stories
+        })
+        return  parent_init
+    # 声明静态方法：
+    prompt_init = staticmethod(prompt_init)
+
+# Purchase 购置类
+class Purchase:
+    def __init__(self, price="", taxes="", **kwargs):
+        super().__init__(**kwargs)
+        self.price = price
+        self.taxes = taxes
+
+    def display(self):
+        super.display()
