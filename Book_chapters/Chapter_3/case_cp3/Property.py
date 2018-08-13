@@ -143,12 +143,120 @@ class House(Property):
     # 声明静态方法：
     prompt_init = staticmethod(prompt_init)
 
+
 # Purchase 购置类
 class Purchase:
     def __init__(self, price="", taxes="", **kwargs):
+        """
+        为了便于 和其他类结合（多重继承）到一起
+        并且我们不知道super方法的调用顺序，这里调用了super().__init__方法
+        当我们在单独的子类里把这4个类的功能组合到一起的时候，这个接口非常有用
+        :param price:
+        :param taxes:
+        :param kwargs:
+        """
         super().__init__(**kwargs)
         self.price = price
         self.taxes = taxes
 
     def display(self):
         super.display()
+        print("购置信息：")
+        print("出售价格：{}".format(self.price))
+        print("税额：{}".format(self.taxes))
+
+    def prompt_init():
+        return dict(
+            price=input("请输入出售价格："),
+            taxes=input("请输入应缴税额:")
+        )
+    # 声明静态方法：
+    prompt_init = staticmethod(prompt_init)
+
+
+# Rental租赁类
+class Rental:
+    def __init__(self, furnished="", utilities="", rent="", **kwargs):
+        super().__init__(**kwargs)
+        self.furnished = furnished  # 是否有家具
+        self.rent = rent    #
+        self.utilities = utilities  # 用途
+
+    def display(self):
+        super().display()
+        print("出租详情：")
+        print("出租价格：{}".format(self.rent))
+        print("出租用途：{}".format(self.utilities))
+        print("家具情况：{}".format(self.furnished))
+
+    def prompt_init():
+        return dict(
+            rent=input("请输入每个月的租金："),
+            utilities=input("请输入出租用途："),
+            furnished=input("是否有家具：")
+        )
+    # 声明静态方法：
+    prompt_init = staticmethod(prompt_init)
+
+
+# 创建组合子类：
+
+#HouseRental类（可出租的House）
+class HouseRental(Rental, House):
+    def prompt_init():
+        init = House.prompt_init()
+        init.update(Rental.prompt_init())
+        return  init
+    prompt_init = staticmethod(prompt_init)
+
+
+# ApartmentRental类（可出租的公寓）
+class ApartmentRental(Rental, Apartment):
+    def prompt_init():
+        init = Apartment.prompt_init()
+        init.update(Rental.prompt_init())
+        return init
+    prompt_init = staticmethod(prompt_init)
+
+
+# ApartmentPurchase类（可购置的公寓）
+class ApartmentPurchase(Purchase, Apartment):
+    def prompt_init():
+        init = Apartment.prompt_init()
+        init.update(Purchase.prompt_init())
+        return init
+    prompt_init = staticmethod(prompt_init)
+
+
+# HousePurchase类（可购置的House）
+class HousePurchase(Purchase, House):
+    def prompt_init():
+        init = House.prompt_init()
+        init.update(Purchase.prompt_init())
+        return init
+    prompt_init = staticmethod(prompt_init)
+
+
+# 创建Agent类（代理）
+class Agent:
+    def __init__(self):
+        self.property_list = []
+
+    def display_properties(self):
+        for property in self.property_list:
+            property.display()
+
+    type_map = {
+        ("house", "rental"): HouseRental,
+        ("house", "purchase"): HousePurchase,
+        ("apartment", "rental"): ApartmentRental,
+        ("apartment", "purchase"): ApartmentPurchase
+    }
+
+    def add_property(self):
+        property_type = get_valid_input("请输入房产类型：", ("house", "apartment"))
+        payment_type = get_valid_input("请输入购置类型：", ("purchase", "rental"))
+
+        PropertyClass = self.type_map[(property_type, payment_type)]
+        init_args = PropertyClass.prompt_init()
+        self.property_list.append(PropertyClass(**init_args))

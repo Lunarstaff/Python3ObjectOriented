@@ -41,3 +41,9 @@
 
     注./类关系图.png
     这些类时硕最难的部分就是确保在继承层次结构里调用超类的方法。
+
+Note：
+    继承类的顺序是非常重要的。如果我们写了class HouseRental(House, Rental)
+    而不是class HouseRental(Rental, House)的话，display()方法就不会调用Rental。display()
+    在代码中的HouseRental中，当调用display()来方法时，它指向了Rental中的方法，
+    这个方法又会调用super().display()来得到House
