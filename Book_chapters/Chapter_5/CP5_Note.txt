@@ -1,0 +1,95 @@
+-怎样识别一个对象
+-再论“数据”和“行为”
+-通过property把数据包装在行为中
+-通过行为限制数据的访问
+-DRY（Don't Repeat Yourself，不要让自己重复）原则
+-识别相同的代码
+
+# 不要因为能够使用一个对象就急于使用这个对象，也绝不要在当你需要使用一个类的时候，疏于创建一个类。
+
+把对象当作“对象”来对待
+    先确定问题中的对象，之后用代码模拟它们的数据和行为。
+    确定对象是面向对象分析与编程中最为重要的任务，
+        如果只对数据操作，使用列表、集合、字典或是Python中其他的数据结构
+        如果只关注行为而不是存储任务数据，那一个简单的函数则更为合适
+
+    从对几个变量中的数据进行排序开始，随着排序程序一步一步地扩展，把同一组相关的变更传到
+    不同的函数中去，这就是一个适合将变更和函数合成类的好场景。
+
+    设计一个程序在二维空间中对多边形（polygon）建模。
+        1>  以一个存储着各个顶点（point）的列表来代表这个多边形，
+            每个顶点以一个二维元组(x, y)建模，该元组描述顶点的位置坐标
+            将顶点存储在一个两层嵌套的数据结构中（一个元组的列表）
+    计算多边形的周长。
+        计算两点间距离
+        将相邻两点之间的距离相加
+    # 注 polygon_perimeter_v1.py
+    面向对象版本的代码：注 polygon_perimeter_v2.py
+
+    使面向对象的Polygon类像函数那样易用，注： polygon_perimeter_v3.py
+    # v3,将Polygon类中的API变换一下，使它构造时能够接收多个点（一个Point对象的列表）作为参数
+
+    对象之间的交互，首先来看是继承关系，继承关系在没有类的情况下不可能被简洁地模拟出来，所以
+    一定要使用类来表现继承关系。再看关联和组合关系，从技术上讲，组合关系仅使用一般的数据结构就能够
+    被模拟
+
+使用property为为中的数据添加行为！！！
+    我们可以使用Python中的property关键字，使一个方法看起来就像一个属性一样。
+    假如我们原本使用直接成员访问的方式去访问属性，之后我们可以增加几个方法，在不改变访问接口的情况下
+    来对类中的属性进行取值和赋值。需要怎么做？
+    注：Color_v1.py
+    # 使用Python中的property关键字，使一个方法看起来就像一个属性一样。
+    class Cloor:
+        """
+        1、将name属性设置为一个（半）私有的_name属性，
+        2、添加两个（半）私有方法对这个_name进行取值和赋值，并在赋值时进行验证。
+        3、在代码底部使用property关键字进行声明
+
+        name属性变成了一个property属性，需要通过调用添加的两个（半）私有方法才能访问或是改变其值。
+        """
+        def __init__(self, rgb_value, name):
+            self.rgb_value = rgb_value
+            self._name = name
+
+        def _set_name(self, name):
+            if not name:
+                raise Exception("Invalid Name")
+            self._name = name
+
+        def _get_name(self):
+            return self._name
+
+        name = property(_get_name, _set_name)
+    # Color类仍然可以像以前一样直接对name进行赋值使用：
+    # 测试：
+    >>> import Color
+    >>> c = Color.Color("#0000ff", "bright_red")
+    >>> print(c.name)
+    bright_red
+    >>> c.name = "red"
+    >>> print(c.name)
+    red
+    >>> c.name = ""
+    Traceback (most recent call last):
+      File "<pyshell#7>", line 1, in <module>
+        c.name = ""
+      File "C:\Program Files\Python36\Color.py", line 16, in _set_name
+        raise Exception("Invalid Name")
+    Exception: Invalid Name
+
+    property是怎样工作的 ？
+        property函数实际上返回了一个对象，该对象通过我们指定的方法代理了全部对象属性值访问或
+        赋值的请求。property关键字实际上就是构造了这样一个对象。
+
+        property构造函数实际上还可以接收两个额外的参数：一个删除函数和一个property的文本字符串。
+    实际应用中property通常只定义前两个参数：getter函数和setter函数。
+    文本字符串被定义为一般的getter函数的文本字符串，并复制到property，
+    而删除函数则为空，因为对象属性极少需要被删除
+
+装饰器：创建property的另一种方法
+    作为一个动态修改函数的方法，装饰器将被装饰函数作为参数传入到另一个函数，从而得到一个新函数并将它返回。
+
+    使用装饰器：
+        为函数名添加一个@符号作为前缀，并把结果放置在被装饰函数的定义之前就可以了。
+
+        property函数本身也可以使用装饰器语法来使用一个get函数变成property函数的参数：
